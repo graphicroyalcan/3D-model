@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Can Industries</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    <style>
+        /* ตั้งค่าพื้นหลังและขนาดหน้าจอ */
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #ffffff; /* เปลี่ยนสีพื้นหลังที่นี่ */
+        }
+
+        /* ตั้งค่าตำแหน่งและขนาดของโลโก้ */
+        .logo-container {
+            position: absolute;
+            top: 20px;       /* ห่างจากขอบบน 20px */
+            left: 20px;      /* ห่างจากขอบซ้าย 20px */
+            z-index: 1000;   /* ให้อยู่เหนือโมเดล 3D */
+            pointer-events: none; /* เพื่อให้ยังหมุนโมเดลผ่านโลโก้ได้ */
+        }
+
+        .logo-container img {
+            width: 150px;    /* ปรับขนาดความกว้างของโลโก้ที่นี่ */
+            height: auto;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2)); /* เพิ่มเงาให้โลโก้ดูเด่น */
+        }
+
+        /* ตั้งค่าตัวเล่นโมเดล 3D */
+        model-viewer {
+            width: 100%;
+            height: 100vh;
+            --poster-color: transparent;
+        }
+
+        /* ปรับแต่งปุ่ม AR ให้สวยงาม */
+        #ar-button {
+            background-color: #ffffff;
+            border-radius: 30px;
+            border: 1px solid #dadce0;
+            bottom: 30px;
+            left: 50%;
+            position: absolute;
+            transform: translateX(-50%);
+            padding: 14px 28px;
+            font-family: sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            color: #1a73e8;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            cursor: pointer;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="LOGO.png" alt="Company Logo">
+    </div>
+
+    <model-viewer 
+        src="NNS034 Oval End.glb"
+        ar 
+        ar-modes="webxr scene-viewer quick-look" 
+        camera-controls 
+        tone-mapping="neutral" 
+        shadow-intensity="1" 
+        auto-rotate
+        touch-action="pan-y"
+        alt="3D Model Preview">
+        
+        <button slot="ar-button" id="ar-button">
+            📦 ส่องดูของจริง (AR)
+        </button>
+    </model-viewer>
+
+</body>
+</html>
