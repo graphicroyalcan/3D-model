@@ -177,7 +177,7 @@
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>521.500000:252.000000</string>
+				<string>368.500000:252.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Ask for Text.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -233,20 +233,20 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>COMMAND_STRING</key>
-					<string># 1. ค้นหาที่อยู่ของแอปตัวนี้ เพื่อตั้งเป็นที่ทำงานหลัก
-# วิธีนี้จะทำให้คุณย้ายแอปไปวางที่ไหน มันก็จะสร้างไฟล์ที่นั่นครับ
-APP_PATH="$(dirname "$0")"
-cd "$APP_PATH"
-
-# 2. รับชื่อไฟล์โมเดลจากหน้าต่าง Ask for Text
+					<string># 1. รับชื่อไฟล์จาก Ask for Text
 newModel="$1"
 
+# 2. หาที่อยู่ที่แอปตัวนี้วางอยู่ (เพื่อให้สร้างไฟล์ถูกโฟลเดอร์)
+export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+CURRENT_DIR="$(dirname "$0")"
+cd "$CURRENT_DIR"
+
+# 3. ตรวจสอบชื่อไฟล์
 if [ -z "$newModel" ]; then
-    osascript -e 'display notification "Error: ไม่ได้ใส่ชื่อไฟล์" with title "3D Generator"'
+    osascript -e 'display notification "Error: ไม่ได้ระบุชื่อไฟล์" with title "3D Generator"'
     exit 1
 fi
 
-# 3. แยกชื่อไฟล์เพื่อตั้งชื่อ .html
 fileName="${newModel%.*}"
 outputFile="${fileName}.html"
 
@@ -269,7 +269,7 @@ cat &lt;&lt;EOF &gt; "$outputFile"
 &lt;/head&gt;
 &lt;body&gt;
     &lt;div class="logo-container"&gt;&lt;img src="RCIlogo.png" alt="Logo"&gt;&lt;/div&gt;
-    &lt;model-viewer src="$newModel" ar ar-modes="webxr scene-viewer quick-look" camera-controls shadow-intensity="1" auto-rotate&gt;
+    &lt;model-viewer src="$newModel" ar ar-modes="webxr scene-viewer quick-look" camera-controls shadow-intensity="1" auto-rotateTouch-action="pan-y"&gt;
         &lt;button slot="ar-button" id="ar-button"&gt;📦 View in AR&lt;/button&gt;
     &lt;/model-viewer&gt;
 &lt;/body&gt;
@@ -280,19 +280,23 @@ EOF
 encodedName=$(echo "$outputFile" | sed 's/ /%20/g')
 echo "https://graphicroyalcan.github.io/3D-model/$encodedName" | pbcopy
 
-# 6. อัปโหลดขึ้น GitHub
+# 6. ตรวจสอบ Git และอัปโหลด
 if [ -d ".git" ]; then
-    git add .
-    git commit -m "Auto-upload: $outputFile"
-    git push origin main
-    osascript -e 'display notification "สร้างไฟล์และ Push สำเร็จ (Copy ลิงก์แล้ว)" with title "3D Generator"'
+    /usr/bin/git add .
+    /usr/bin/git commit -m "Auto-upload: $outputFile"
+    /usr/bin/git push origin main 2&gt;&amp;1
+    if [ $? -eq 0 ]; then
+        osascript -e 'display notification "สร้างไฟล์และ Push สำเร็จ (Copy ลิงก์แล้ว)" with title "3D Generator"'
+    else
+        osascript -e 'display notification "Push ไม่สำเร็จ กรุณาเช็คอินเทอร์เน็ต" with title "3D Generator"'
+    fi
 else
     osascript -e 'display notification "สร้างไฟล์แล้วแต่ Push ไม่ได้ (ไม่พบ .git)" with title "3D Generator"'
 fi</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
 					<key>inputMethod</key>
-					<integer>0</integer>
+					<integer>1</integer>
 					<key>shell</key>
 					<string>/bin/bash</string>
 					<key>source</key>
@@ -401,7 +405,7 @@ fi</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>521.500000:983.000000</string>
+				<string>368.500000:971.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
@@ -536,7 +540,7 @@ fi</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>521.500000:1173.000000</string>
+				<string>368.500000:1161.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Display Notification.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -546,19 +550,19 @@ fi</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>0948322D-5BF7-4BD6-9E38-47295DB68ECF</key>
-		<dict>
-			<key>from</key>
-			<string>FADE6447-9C24-428A-AB75-6933DED4CFAA - FADE6447-9C24-428A-AB75-6933DED4CFAA</string>
-			<key>to</key>
-			<string>568CF0AF-72B6-4747-A1E4-37098D4B9129 - 568CF0AF-72B6-4747-A1E4-37098D4B9129</string>
-		</dict>
-		<key>452B192C-6DF2-4CA8-9532-B64D13519C17</key>
+		<key>CCD21315-C9B9-4E0A-B278-183D439D68B0</key>
 		<dict>
 			<key>from</key>
 			<string>F2594CBB-C658-442B-8500-9369C3956F48 - F2594CBB-C658-442B-8500-9369C3956F48</string>
 			<key>to</key>
 			<string>FADE6447-9C24-428A-AB75-6933DED4CFAA - FADE6447-9C24-428A-AB75-6933DED4CFAA</string>
+		</dict>
+		<key>E2FB6BD3-7AAF-4680-915D-F32645642DC8</key>
+		<dict>
+			<key>from</key>
+			<string>FADE6447-9C24-428A-AB75-6933DED4CFAA - FADE6447-9C24-428A-AB75-6933DED4CFAA</string>
+			<key>to</key>
+			<string>568CF0AF-72B6-4747-A1E4-37098D4B9129 - 568CF0AF-72B6-4747-A1E4-37098D4B9129</string>
 		</dict>
 	</dict>
 	<key>workflowMetaData</key>
