@@ -233,24 +233,24 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>COMMAND_STRING</key>
-					<string># 1. รับชื่อไฟล์จากหน้าต่างพิมพ์ข้อความ
-read newModel
+					<string># 1. ค้นหาที่อยู่ของแอปตัวนี้ เพื่อตั้งเป็นที่ทำงานหลัก
+# วิธีนี้จะทำให้คุณย้ายแอปไปวางที่ไหน มันก็จะสร้างไฟล์ที่นั่นครับ
+APP_PATH="$(dirname "$0")"
+cd "$APP_PATH"
 
-# 2. ย้ายตำแหน่งไปที่โฟลเดอร์ Repository ของคุณ (***ต้องแก้ไขที่อยู่ให้ตรงกับเครื่องคุณ***)
-# ตัวอย่าง: cd /Users/macgra/Documents/GitHub/3D-model
-cd "/Users/macgra/Documents/GitHub/3D-model"
+# 2. รับชื่อไฟล์โมเดลจากหน้าต่าง Ask for Text
+newModel="$1"
 
-# 3. ตรวจสอบว่ามีโฟลเดอร์ .git หรือไม่
-if [ ! -d ".git" ]; then
-    osascript -e 'display notification "Error: ไม่พบโฟลเดอร์ .git ในที่อยู่ที่ระบุ" with title "3D Generator"'
+if [ -z "$newModel" ]; then
+    osascript -e 'display notification "Error: ไม่ได้ใส่ชื่อไฟล์" with title "3D Generator"'
     exit 1
 fi
 
-# 4. แยกชื่อไฟล์เพื่อตั้งชื่อ .html
+# 3. แยกชื่อไฟล์เพื่อตั้งชื่อ .html
 fileName="${newModel%.*}"
 outputFile="${fileName}.html"
 
-# 5. สร้างไฟล์ HTML (จัดรูปแบบสวยงามเหมือนฝั่งซ้าย)
+# 4. สร้างไฟล์ HTML (จัดรูปแบบสวยงามเหมือนฝั่งซ้าย)
 cat &lt;&lt;EOF &gt; "$outputFile"
 &lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
@@ -260,61 +260,34 @@ cat &lt;&lt;EOF &gt; "$outputFile"
     &lt;title&gt;Designdee 3D Preview&lt;/title&gt;
     &lt;script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"&gt;&lt;/script&gt;
     &lt;style&gt;
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: #ffffff;
-        }
-        .logo-container {
-            position: absolute; top: 20px; left: 20px;
-            z-index: 1000; pointer-events: none;
-        }
-        .logo-container img {
-            width: 150px; height: auto;
-            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2));
-        }
-        model-viewer {
-            width: 100%; height: 100vh;
-            --poster-color: transparent;
-        }
-        #ar-button {
-            background-color: #ffffff; border-radius: 30px;
-            border: 1px solid #dadce0; bottom: 30px; left: 50%;
-            position: absolute; transform: translateX(-50%);
-            padding: 14px 28px; font-family: sans-serif;
-            font-size: 16px; font-weight: bold; color: #1a73e8;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15); cursor: pointer; z-index: 1000;
-        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #ffffff; }
+        .logo-container { position: absolute; top: 20px; left: 20px; z-index: 1000; pointer-events: none; }
+        .logo-container img { width: 150px; height: auto; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2)); }
+        model-viewer { width: 100%; height: 100vh; --poster-color: transparent; }
+        #ar-button { background-color: #ffffff; border-radius: 30px; border: 1px solid #dadce0; bottom: 30px; left: 50%; position: absolute; transform: translateX(-50%); padding: 14px 28px; font-family: sans-serif; font-size: 16px; font-weight: bold; color: #1a73e8; box-shadow: 0 4px 10px rgba(0,0,0,0.15); cursor: pointer; z-index: 1000; }
     &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
-    &lt;div class="logo-container"&gt;
-        &lt;img src="RCIlogo.png" alt="Company Logo"&gt;
-    &lt;/div&gt;
-    &lt;model-viewer
-        src="$newModel"
-        ar ar-modes="webxr scene-viewer quick-look"
-        camera-controls tone-mapping="neutral"
-        shadow-intensity="1" auto-rotate touch-action="pan-y"
-        alt="3D Model Preview"&gt;
+    &lt;div class="logo-container"&gt;&lt;img src="RCIlogo.png" alt="Logo"&gt;&lt;/div&gt;
+    &lt;model-viewer src="$newModel" ar ar-modes="webxr scene-viewer quick-look" camera-controls shadow-intensity="1" auto-rotate&gt;
         &lt;button slot="ar-button" id="ar-button"&gt;📦 View in AR&lt;/button&gt;
     &lt;/model-viewer&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 EOF
 
-# 6. คัดลอกลิงก์ลง Clipboard
+# 5. คัดลอกลิงก์ (จัดการช่องว่างให้ด้วย)
 encodedName=$(echo "$outputFile" | sed 's/ /%20/g')
 echo "https://graphicroyalcan.github.io/3D-model/$encodedName" | pbcopy
 
-# 7. อัปโหลดขึ้น GitHub
-git add .
-git commit -m "Auto-upload: $outputFile"
-git push origin main
-
-if [ $? -eq 0 ]; then
-    echo "สำเร็จ: สร้างไฟล์และอัปโหลดแล้ว (คัดลอกลิงก์ให้แล้ว)"
+# 6. อัปโหลดขึ้น GitHub
+if [ -d ".git" ]; then
+    git add .
+    git commit -m "Auto-upload: $outputFile"
+    git push origin main
+    osascript -e 'display notification "สร้างไฟล์และ Push สำเร็จ (Copy ลิงก์แล้ว)" with title "3D Generator"'
 else
-    echo "แจ้งเตือน: อัปโหลดไม่สำเร็จ แต่สร้างไฟล์เรียบร้อย"
+    osascript -e 'display notification "สร้างไฟล์แล้วแต่ Push ไม่ได้ (ไม่พบ .git)" with title "3D Generator"'
 fi</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>
@@ -428,7 +401,7 @@ fi</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>521.500000:996.000000</string>
+				<string>521.500000:983.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
@@ -563,7 +536,7 @@ fi</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>521.500000:1186.000000</string>
+				<string>521.500000:1173.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Display Notification.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -573,14 +546,14 @@ fi</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>8465A2AF-5BE6-45E5-9C64-AC18C45D566F</key>
+		<key>0948322D-5BF7-4BD6-9E38-47295DB68ECF</key>
 		<dict>
 			<key>from</key>
 			<string>FADE6447-9C24-428A-AB75-6933DED4CFAA - FADE6447-9C24-428A-AB75-6933DED4CFAA</string>
 			<key>to</key>
 			<string>568CF0AF-72B6-4747-A1E4-37098D4B9129 - 568CF0AF-72B6-4747-A1E4-37098D4B9129</string>
 		</dict>
-		<key>D973E9D5-389A-4F1F-A75A-5DAA7059138E</key>
+		<key>452B192C-6DF2-4CA8-9532-B64D13519C17</key>
 		<dict>
 			<key>from</key>
 			<string>F2594CBB-C658-442B-8500-9369C3956F48 - F2594CBB-C658-442B-8500-9369C3956F48</string>
