@@ -238,7 +238,7 @@ read newModel
 
 # 2. ย้ายตำแหน่งไปที่โฟลเดอร์ Repository ของคุณ (***ต้องแก้ไขที่อยู่ให้ตรงกับเครื่องคุณ***)
 # ตัวอย่าง: cd /Users/macgra/Documents/GitHub/3D-model
-cd "ที่อยู่โฟลเดอร์ GitHub ของคุณ"
+cd "/Users/macgra/Documents/GitHub/3D-model"
 
 # 3. ตรวจสอบว่ามีโฟลเดอร์ .git หรือไม่
 if [ ! -d ".git" ]; then
@@ -428,7 +428,7 @@ fi</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>521.500000:765.000000</string>
+				<string>521.500000:996.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
@@ -563,7 +563,7 @@ fi</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>521.500000:955.000000</string>
+				<string>521.500000:1186.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Display Notification.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -573,14 +573,14 @@ fi</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>75EE2401-65A3-4C56-A8B2-BDAE20D67074</key>
+		<key>8465A2AF-5BE6-45E5-9C64-AC18C45D566F</key>
 		<dict>
 			<key>from</key>
 			<string>FADE6447-9C24-428A-AB75-6933DED4CFAA - FADE6447-9C24-428A-AB75-6933DED4CFAA</string>
 			<key>to</key>
 			<string>568CF0AF-72B6-4747-A1E4-37098D4B9129 - 568CF0AF-72B6-4747-A1E4-37098D4B9129</string>
 		</dict>
-		<key>D7DF1EBB-B38A-4B2E-892F-75B0FFE8686B</key>
+		<key>D973E9D5-389A-4F1F-A75A-5DAA7059138E</key>
 		<dict>
 			<key>from</key>
 			<string>F2594CBB-C658-442B-8500-9369C3956F48 - F2594CBB-C658-442B-8500-9369C3956F48</string>
