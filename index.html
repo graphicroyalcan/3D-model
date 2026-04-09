@@ -1,23 +1,39 @@
-﻿<DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Designdee 3D Preview</title>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <title>Online TV Full Frame</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #ffffff; }
-        .logo-container { position: absolute; top: 20px; left: 20px; z-index: 1000; pointer-events: none; }
-        .logo-container img { width: 150px; height: auto; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2)); }
-        model-viewer { width: 100%; height: 100vh; --poster-color: transparent; }
-        #ar-button { background-color: #ffffff; border-radius: 30px; border: 1px solid #dadce0; bottom: 30px; left: 50%; position: absolute; transform: translateX(-50%); padding: 14px 28px; font-family: sans-serif; font-size: 16px; font-weight: bold; color: #1a73e8; box-shadow: 0 4px 10px rgba(0,0,0,0.15); cursor: pointer; z-index: 1000; }
+        /* ลบ margin/padding ของหน้าหลักออกให้หมด */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* ป้องกันการเกิด scrollbar ซ้อนกัน */
+        }
+
+        /* ตั้งค่า iframe ให้เต็มพื้นที่ */
+        .tv-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
-    <div class="logo-container"><img src="RCIlogo.png" alt="Logo"></div>
-    <model-viewer src="RCIlogo.png" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" shadow-intensity="1" auto-rotate touch-action="pan-y">
-        <button slot="ar-button" id="ar-button">View in AR</button>
-    </model-viewer>
-</body>
-</html>
 
+    <iframe 
+        src="https://script.google.com/macros/s/AKfycby3GJgvenStFL4s__Eqln0kEM6hk8E9AB7DcHjn0hbeZPUJNglpdeqAfbN9q3XPZkVY/exec" 
+        class="tv-frame"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen>
+    </iframe>
+
+</body>
+
+</html>
